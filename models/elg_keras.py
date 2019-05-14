@@ -80,7 +80,7 @@ class KerasELG():
         return out
     
     def _build_hourglass(self, x, steps_to_go, f, depth=1, name=None):
-        prefix_name = name + "_depth" % (depth)
+        prefix_name = name + "_depth%d" % (depth)
         
         # Upper branch
         up1 = x

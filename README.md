@@ -1,5 +1,5 @@
 # GazeML-keras
-A keras port of [swook/GazeML](https://github.com/swook/GazeML) for eye region landmarks detection. 
+A keras port of [swook/GazeML](https://github.com/swook/GazeML) for eye region landmarks detection. Forked from [shaoanlu/GazeML-keras] to use with Python 3.5 by removing f-string formatting.
 
 The dlib face detector is replaced by MTCNN.
 
