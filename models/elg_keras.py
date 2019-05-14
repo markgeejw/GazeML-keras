@@ -104,7 +104,7 @@ class KerasELG():
         # Additional residual blocks
         low3 = low2
         for i in range(self._hg_num_residual_blocks):
-            low3 = self._build_residual_block(low3, f, name=prefix_name+"_low3_"%(i+1))
+            low3 = self._build_residual_block(low3, f, name=prefix_name+"_low3_%d"%(i+1))
             
         # Upsample
         up2 = Lambda(
