@@ -36,7 +36,7 @@ class KerasELG():
         x = pre_res2
         x_prev = pre_res2
         for i in range(self._hg_num_modules):
-            prefix = f"hourglass_hg_{str(i+1)}"
+            prefix = "hourglass_hg_%d" % (i+1)
             x = self._build_hourglass(x, steps_to_go=4, f=self._hg_num_feature_maps, name=prefix)
             x, h = self._build_hourglass_after(
                 x_prev, 
@@ -80,17 +80,17 @@ class KerasELG():
         return out
     
     def _build_hourglass(self, x, steps_to_go, f, depth=1, name=None):
-        prefix_name = name + f"_depth{str(depth)}"
+        prefix_name = name + "_depth" % (depth)
         
         # Upper branch
         up1 = x
         for i in range(self._hg_num_residual_blocks):
-            up1 = self._build_residual_block(up1, f, name=prefix_name+f"_up1_{str(i+1)}")
+            up1 = self._build_residual_block(up1, f, name=prefix_name+"_up1_%d" % (i+1))
             
         # Lower branch
         low1 = self._apply_pool(x, k=2, s=2)
         for i in range(self._hg_num_residual_blocks):
-            low1 = self._build_residual_block(low1, f, name=prefix_name+f"_low1_{str(i+1)}")
+            low1 = self._build_residual_block(low1, f, name=prefix_name+"_low1_%d" % (i+1))
             
         # Recursive
         low2 = None
@@ -99,12 +99,12 @@ class KerasELG():
         else:
             low2 = low1
             for i in range(self._hg_num_residual_blocks):
-                low2 = self._build_residual_block(low2, f, name=prefix_name+f"_low2_{str(i+1)}")
+                low2 = self._build_residual_block(low2, f, name=prefix_name+"_low2_%d"%(i+1))
                 
         # Additional residual blocks
         low3 = low2
         for i in range(self._hg_num_residual_blocks):
-            low3 = self._build_residual_block(low3, f, name=prefix_name+f"_low3_{str(i+1)}")
+            low3 = self._build_residual_block(low3, f, name=prefix_name+"_low3_"%(i+1))
             
         # Upsample
         up2 = Lambda(
@@ -123,7 +123,7 @@ class KerasELG():
             x_now = self._build_residual_block(
                 x_now, 
                 self._hg_num_feature_maps, 
-                name=prefix_name+f"_after_hg_{str(j+1)}")
+                name=prefix_name+"_after_hg_%d" % (j+1))
         x_now = self._apply_conv(x_now, self._hg_num_feature_maps, k=1, s=1, name=prefix_name)
         x_now = self._apply_bn(x_now, name=prefix_name+"_BatchNorm")
         x_now = Activation('relu')(x_now)
